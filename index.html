@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Task Map</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <div id="cy"></div>
+    <div
+      id="team-selector"
+      class="absolute top-4 right-4 z-10 bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden flex"
+    ></div>
+    <div
+      id="task-modal"
+      class="absolute z-20 w-full max-w-md bg-gray-800 text-gray-300 rounded-xl shadow-2xl overflow-hidden transition-opacity duration-300 scale-95 opacity-0 invisible border-t-4 border-transparent"
+    >
+      <div
+        id="modal-header"
+        class="flex items-center p-5 bg-gray-700 border-b border-gray-600 transition-colors duration-300"
+      >
+        <img
+          id="modal-icon"
+          src="https://placehold.co/64x64/eee/999?text=ICON"
+          onerror="this.src='https://placehold.co/64x64/eee/999?text=ICON'"
+          alt="Task Icon"
+          class="w-16 h-16 rounded-lg mr-4 bg-gray-200"
+        />
+        <div>
+          <h2 id="modal-name" class="text-2xl font-bold text-white">
+            Task Name
+          </h2>
+          <span class="text-sm font-medium text-gray-400">Task Details</span>
+        </div>
+        <button
+          id="modal-close"
+          class="absolute top-4 right-4 text-gray-400 hover:text-gray-200"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 max-h-[60vh] overflow-y-auto">
+        <p id="modal-description" class="text-gray-300 leading-relaxed">
+          Task description goes here...
+        </p>
+
+        <!-- Rewards Section -->
+        <div id="modal-rewards" class="mt-6 pt-4 border-t border-gray-600">
+          <h4 class="text-sm font-semibold text-gray-400 uppercase mb-3">
+            Rewards
+          </h4>
+          <ul id="modal-rewards-list" class="space-y-3">
+            <!-- Reward items go here -->
+          </ul>
+        </div>
+
+        <div id="modal-predicate" class="mt-6 pt-4 border-t border-gray-600">
+          <h4 class="text-sm font-semibold text-gray-400 uppercase mb-3">
+            Requires
+          </h4>
+          <ul id="modal-predicate-list" class="space-y-3">
+            <!-- Predicate items go here -->
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zoom Controls (top left) -->
+    <div
+      id="zoom-controls"
+      class="absolute top-4 left-4 z-10 p-3 bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-lg flex items-center space-x-3"
+    >
+      <!-- Zoom Out -->
+      <svg
+        id="zoom-out-btn"
+        class="w-6 h-6 text-gray-300 cursor-pointer hover:text-blue-400"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M21 21l-5-5m0 0A7.5 7.5 0 105 5a7.5 7.5 0 0011 11zM13.5 10.5h-6"
+        />
+      </svg>
+      <input id="zoom-slider" type="range" min="25" max="200" value="100" />
+      <!-- Zoom In -->
+      <svg
+        id="zoom-in-btn"
+        class="w-6 h-6 text-gray-300 cursor-pointer hover:text-blue-400"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M21 21l-5-5m0 0A7.5 7.5 0 105 5a7.5 7.5 0 0011 11zM10.5 7.5v6m3-3h-6"
+        />
+      </svg>
+    </div>
+
+    <!-- Reset layout button -->
+    <div
+      class="absolute bottom-4 right-4 z-10 flex flex-col items-end space-y-2"
+    >
+      <button
+        id="reset-layout-btn"
+        title="Reset Layout"
+        class="p-3 bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-lg hover:bg-gray-700 transition"
+      >
+        <svg
+          class="w-6 h-6 text-gray-300"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0 0v-4.992m0 0h-4.992"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <script src="scripts/main.js"></script>
+  </body>
+</html>

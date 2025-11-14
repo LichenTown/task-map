@@ -1,0 +1,52 @@
+[
+  {
+    "id": "build_a_road",
+    "name": "Where All Roads Lead",
+    "description": "Complete by constructing your first road!",
+    "predicates": [],
+    "icon": "horse.png",
+    "rewards": [
+      {
+        "name": "Naval Travel",
+        "icon": "ship.png",
+        "description": "Unlocks the ability to build ships to explore the open ocean."
+      }
+    ]
+  },
+  {
+    "id": "build_a_ship",
+    "name": "The Open Sea",
+    "description": "Complete by building your first ship, one fit for a real adventure!",
+    "predicates": ["build_a_road"],
+    "icon": "ship.png",
+    "rewards": [
+      {
+        "name": "Railway Travel",
+        "icon": "train.png",
+        "description": "Unlocks the ability to build trains and railways to get places in speed and style!"
+      }
+    ]
+  },
+  {
+    "id": "build_a_train",
+    "name": "Riding the Rails",
+    "description": "Complete by engineering your first train and a fully functioning railway connecting two areas of your nation!",
+    "predicates": ["build_a_ship"],
+    "icon": "train.png",
+    "rewards": [
+      {
+        "name": "Air Travel",
+        "icon": "airship.png",
+        "description": "Unlocks the ability to build airships and soar to new heights!"
+      }
+    ]
+  },
+  {
+    "id": "build_an_airship",
+    "name": "Soaring Above",
+    "description": "Complete by building your first airship. It should include some manner of propulsion (balloons, propellers, etc.), have room for passengers, and (of course) be able to fly!",
+    "predicates": ["build_a_train"],
+    "icon": "airship.png",
+    "rewards": []
+  }
+]

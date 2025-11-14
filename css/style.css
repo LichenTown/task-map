@@ -1,0 +1,120 @@
+body {
+  font-family: "Plus Jakarta Sans", "Inter", system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Noto Color Emoji";
+  background-color: #1a1a1a;
+  color: #f0f2f5;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#cy {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.team-button.active {
+  border-bottom-width: 4px;
+}
+
+#zoom-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10rem;
+  height: 8px;
+  background: #d1d5db;
+  border-radius: 99px;
+  outline: none;
+}
+#zoom-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #3b82f6;
+  border-radius: 50%;
+  cursor: pointer;
+}
+#zoom-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #3b82f6;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#modal-header {
+  cursor: move;
+}
+
+@media (max-width: 640px) {
+  #team-selector {
+    top: 2px;
+    right: 2px;
+    flex-direction: column;
+  }
+  #zoom-controls {
+    top: 2px;
+    left: 2px;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  #reset-layout-btn {
+    bottom: 2px;
+    right: 2px;
+  }
+
+  #zoom-controls > * {
+    margin-bottom: 8px;
+  }
+
+  #zoom-slider {
+    writing-mode: bt-lr;
+    -webkit-appearance: slider-vertical;
+    width: 8px;
+    height: 8rem;
+    padding: 0;
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+
+  .team-button {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  #task-modal {
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 90%;
+    max-width: 90%;
+  }
+
+  #modal-header {
+    padding: 12px;
+  }
+  #modal-header h2 {
+    font-size: 1.25rem;
+  }
+  #modal-header img {
+    width: 48px;
+    height: 48px;
+    margin-right: 12px;
+  }
+  #modal-close {
+    top: 12px;
+    right: 12px;
+  }
+
+  #modal-modal-body {
+    padding: 16px;
+  }
+}

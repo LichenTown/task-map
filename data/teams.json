@@ -1,0 +1,20 @@
+[
+  {
+    "id": "pink",
+    "name": "Pink Team",
+    "color": "#eb1a82",
+    "completedTasks": ["build_a_road", "build_a_ship", "build_a_train"]
+  },
+  {
+    "id": "yellow",
+    "name": "Yellow Team",
+    "color": "#fcba03",
+    "completedTasks": ["build_a_road"]
+  },
+  {
+    "id": "cyan",
+    "name": "Cyan Team",
+    "color": "#03e3fc",
+    "completedTasks": ["build_a_road", "build_a_ship"]
+  }
+]
