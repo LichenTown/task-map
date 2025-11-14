@@ -2,7 +2,7 @@
   {
     "id": "pink",
     "name": "Pink Team",
-    "color": "#eb1a82",
+    "color": "#ff2672",
     "completedTasks": ["build_a_road", "build_a_ship", "build_a_train"]
   },
   {

@@ -250,8 +250,10 @@ function openTaskModal(node, position) {
 
   if (node.hasClass("completed")) {
     modalName.style.color = transformHex(selectedTeam.color, 20);
+    modalIcon.style.backgroundColor = transformHex(selectedTeam.color, -30);
   } else {
     modalName.style.color = "#ffffff";
+    modalIcon.style.backgroundColor = "oklch(44.6% 0.043 257.281)";
   }
 
   modalIcon.src =
@@ -286,9 +288,12 @@ function openTaskModal(node, position) {
           src="${iconSrc}"
           onerror="this.src='${iconPlaceholder}'"
           alt="Reward Icon"
-          class="w-8 h-8 rounded-md mr-3 ${
-            node.hasClass("completed") ? "bg-green-400" : "bg-gray-600"
-          } flex-shrink-0"
+          class="w-8 h-8 rounded-md mr-3 flex-shrink-0"
+          style="background-color: ${
+            node.hasClass("completed")
+              ? transformHex(selectedTeam.color, -30)
+              : "oklch(44.6% 0.043 257.281)"
+          }"
         />
         <div>
           <span class="text-lg font-semibold text-gray-100">${
@@ -319,28 +324,36 @@ function openTaskModal(node, position) {
 
       const isPredicateComplete = predicateNode.hasClass("completed");
 
-      const statusColorClass = isPredicateComplete
-        ? "text-green-400 hover:text-green-300"
-        : "text-red-400 hover:text-red-300";
-
       const li = document.createElement("li");
       li.className = "flex items-center bg-gray-700 p-3 rounded-lg";
 
-      const iconPlaceholder = `https://placehold.co/32x32/eee/999?text=${predicateData.name.substring(
-        0,
-        2
-      )}`;
+      const iconPlaceholder = predicateData.icon
+        ? predicateData.icon
+        : `https://placehold.co/32x32/eee/999?text=${predicateData.name.substring(
+            0,
+            2
+          )}`;
 
       li.innerHTML = `
         <img
           src="${iconPlaceholder}"
           onerror="this.src='https://placehold.co/32x32/eee/999?text=ICON'"
           alt="Predicate Icon"
-          class="w-8 h-8 rounded-md mr-3 bg-gray-200 flex-shrink-0"
+          class="w-8 h-8 rounded-md mr-3 flex-shrink-0"
+          style="background-color: ${
+            isPredicateComplete
+              ? transformHex(selectedTeam.color, -30)
+              : "oklch(44.6% 0.043 257.281)"
+          }"
         />
         <span
-          class="text-lg font-semibold ${statusColorClass} cursor-pointer"
+          class="text-lg font-semibold cursor-pointer"
           data-predicate-id="${predicateData.id}"
+          style="color: ${
+            isPredicateComplete
+              ? transformHex(selectedTeam.color, 20)
+              : "#ffffff"
+          }"
         >
           ${predicateData.name}
         </span>
