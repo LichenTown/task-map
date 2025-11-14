@@ -36,6 +36,25 @@ function debounce(func, wait) {
   };
 }
 
+function transformHex(hex, amount) {
+  const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+  hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+    return r + r + g + g + b + b;
+  });
+
+  let color = "#";
+  for (let i = 0; i < 3; i++) {
+    let part = hex.substring(i * 2 + 1, i * 2 + 3);
+    let value = parseInt(part, 16);
+
+    value = Math.floor(value * (1 + amount / 100));
+    value = Math.min(Math.max(0, value), 255);
+    color += ("00" + value.toString(16)).slice(-2);
+  }
+
+  return color;
+}
+
 function _saveNodePositions() {
   const positions = {};
   cy.nodes().forEach((node) => {
@@ -137,7 +156,6 @@ function parseTaskData(tasks) {
 
 function updateGraphStyles() {
   if (!cy) return;
-  const teamId = selectedTeam ? selectedTeam.id : null;
   const teamColor = selectedTeam ? selectedTeam.color : "#6b7280";
 
   cy.batch(() => {
@@ -165,7 +183,7 @@ function updateGraphStyles() {
     cy.style()
       .selector(".completed")
       .style({
-        "background-color": teamColor,
+        "background-color": transformHex(teamColor, -30),
         "border-color": teamColor,
         "line-color": teamColor,
         "target-arrow-color": teamColor,
@@ -230,6 +248,12 @@ function openTaskModal(node, position) {
   modalName.textContent = taskData.name;
   modalDescription.textContent = taskData.description;
 
+  if (node.hasClass("completed")) {
+    modalName.style.color = transformHex(selectedTeam.color, 20);
+  } else {
+    modalName.style.color = "#ffffff";
+  }
+
   modalIcon.src =
     taskData.icon ??
     `https::placehold.co/64x64/eee/999?text=${taskData.name.substring(0, 2)}`;
@@ -262,7 +286,9 @@ function openTaskModal(node, position) {
           src="${iconSrc}"
           onerror="this.src='${iconPlaceholder}'"
           alt="Reward Icon"
-          class="w-8 h-8 rounded-md mr-3 bg-gray-600 flex-shrink-0"
+          class="w-8 h-8 rounded-md mr-3 ${
+            node.hasClass("completed") ? "bg-green-400" : "bg-gray-600"
+          } flex-shrink-0"
         />
         <div>
           <span class="text-lg font-semibold text-gray-100">${
@@ -414,9 +440,11 @@ function initializeCytoscape(TASKS_DATA) {
           "border-color": "#6b7280",
           "border-width": 4,
           "background-image": (ele) =>
-            `https://placehold.co/100x100/4b5563/ffffff?text=${ele
-              .data("name")
-              .substring(0, 2)}`,
+            ele.data("icon")
+              ? ele.data("icon")
+              : `https://placehold.co/100x100/4b5563/ffffff?text=${ele
+                  .data("name")
+                  .substring(0, 2)}`,
           "background-fit": "cover",
           "background-clip": "none",
           label: "data(name)",
@@ -428,8 +456,10 @@ function initializeCytoscape(TASKS_DATA) {
           "font-size": 14,
           "text-outline-color": "#1a1a1a",
           "text-outline-width": 3,
-          "transition-property": "background-color, border-color",
+          "transition-property":
+            "background-color, border-color, text-decoration",
           "transition-duration": "0.3s",
+          "text-decoration": "none",
         },
       },
       {
@@ -451,11 +481,13 @@ function initializeCytoscape(TASKS_DATA) {
           shape: "square",
           "background-color": "#10b981",
           "border-color": "#10b981",
-          "border-width": 6,
+          "border-width": 5,
           "background-image": (ele) =>
-            `https://placehold.co/100x100/10b981/ffffff?text=${ele
-              .data("name")
-              .substring(0, 2)}`,
+            ele.data("icon")
+              ? ele.data("icon")
+              : `https://placehold.co/100x100/4b5563/ffffff?text=${ele
+                  .data("name")
+                  .substring(0, 2)}`,
         },
       },
 
